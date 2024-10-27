@@ -60,4 +60,12 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function connect(Request $request)
+    {
+        $user = Auth::user();
+        $user->wallet_address = $request->address;
+        $user->save();
+        return Redirect::to(route('dashboard'));
+    }
 }

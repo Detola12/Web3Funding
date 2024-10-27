@@ -9,7 +9,7 @@ class Contribution extends Model
     protected $fillable = [
         'campaign_id',
         'amount',
-        'wallet_address',
+        'contributor',
     ];
 
     // Define the relationship with the Campaign model

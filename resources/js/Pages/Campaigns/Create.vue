@@ -14,23 +14,28 @@
 
                 <div class="mt-6">
                     <InputLabel>Section</InputLabel>
-                    <TextInput v-model="form.title" class="w-full placeholder:text-sm" placeholder="What is the title of this campaign"></TextInput>
-                    <div v-if="form.errors.section" class="mt-2"></div>
+                    <TextInput v-model="form.description" class="w-full placeholder:text-sm" placeholder="The description of this campaign"></TextInput>
+                    <div v-if="form.errors.description" class="mt-2"></div>
                 </div>
 
                 <div class="mt-6">
                     <InputLabel for="goal_amount">Goal Amount (ETH)</InputLabel>
-                    <TextInput type="number" v-model="goalAmount" placeholder="9.99" step="0.01" required class="w-full p-2 border rounded" />
+                    <TextInput type="number" v-model="form.goalAmount" placeholder="9.99" step="0.01" required class="w-full p-2 border rounded" />
+                    <div v-if="form.errors.goalAmount" class="mt-2"></div>
+
                 </div>
 
                 <div class="mt-6">
                     <InputLabel for="wallet_address">Wallet Address</InputLabel>
-                    <TextInput type="text" v-model="walletAddress" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxx" required class="w-full p-2 border rounded" />
+                    <TextInput type="text" v-model="form.walletAddress" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxx" required class="w-full p-2 border rounded" />
+                    <div v-if="form.errors.walletAddress" class="mt-2"></div>
+
                 </div>
 
                 <div class="mt-6">
                     <InputLabel for="deadline">Deadline</InputLabel>
-                    <TextInput type="date" v-model="deadline" required class="w-full p-2 border rounded" />
+                    <TextInput type="date" v-model="form.deadline" required class="w-full p-2 border rounded" />
+                    <div v-if="form.errors.deadline" class="mt-2"></div>
                 </div>
 
                 <div class="mt-4">

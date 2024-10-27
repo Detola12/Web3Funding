@@ -15,6 +15,9 @@ Route::get('/', function () {
     ]);
 });
 
+# routes/web.
+Route::post('login-web3', \App\Services\LoginWeb3::class)->name('login-web3');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -23,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/connectWallet', [ProfileController::class, 'connect'])->name('connect.wallet');
 });
 
 Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index'); // List of campaigns

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('contributions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
-            $table->string('contributor'); // Address of the contributor
+            $table->foreignId('contributor')->constrained('users'); // Address of the contributor
             $table->decimal('amount', 15, 2); // Amount contributed (in wei)
             $table->timestamps();
         });

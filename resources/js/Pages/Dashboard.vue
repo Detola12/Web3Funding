@@ -84,11 +84,12 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
                 >
                     <div class="p-6 text-gray-900 flex justify-between">
                         <div>
-                            <p v-if="userAddress">Connected: {{ userAddress }}</p>
+                            <p v-if="$attrs.auth.user.wallet_address !== null">Connected: {{ $attrs.auth.user.wallet_address }}</p>
                             <div v-else class="flex">
                                 <p >Connect your wallet to start funding</p>
                                 <Link @click="connectWallet" preserve-scroll
-                                      class="ms-[750px] inline-flex items-center px-3 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 border border-transparent rounded-md hover:bg-gray-700">
+                                      class="ms-[750px] inline-flex items-center px-3 py-2 text-xs font-semibold
+                                      tracking-widest text-white uppercase bg-gray-800 border border-transparent rounded-md hover:bg-gray-700">
                                     Connect wallet
                                 </Link>
                             </div>
@@ -106,7 +107,7 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 <script>
 import {ethers} from "ethers";
 import {ref} from "vue";
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 
 let userAddress = ref(null);
 
@@ -130,7 +131,7 @@ let connectWallet = async () => {
             // Store the user's account address
             userAddress.value = accounts[0];
 
-
+            connect(userAddress.value)
             console.log("Connected:", userAddress.value);
         } catch (error) {
             console.error("User denied account access or error occurred", error);
@@ -139,5 +140,11 @@ let connectWallet = async () => {
         console.error("Please install MetaMask!");
     }
 };
+
+let connect = (address) => {
+    router.post(route('connect.wallet'), {
+        'address' : address
+    });
+}
 
 </script>

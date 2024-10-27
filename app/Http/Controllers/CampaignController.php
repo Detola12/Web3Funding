@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Models\Contribution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Web3\Contract;
 use Web3\Web3;
@@ -44,8 +45,8 @@ class CampaignController extends Controller
         Campaign::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'goal_amount' => $validated['goal_amount'],
-            'owner' => $validated['wallet_address'],  // Wallet address
+            'goal_amount' => $validated['goalAmount'],
+            'owner' => $validated['walletAddress'],  // Wallet address
             'deadline' => $validated['deadline'],
         ]);
 
@@ -69,13 +70,12 @@ class CampaignController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0.01',
-            'wallet_address' => 'required|string|size:42',
         ]);
 
         // Find the campaign by ID
         $campaign = Campaign::findOrFail($id);
-
-        // Get the smart contract instance
+        $campaign->current_amount += $validated['amount'];
+        /*// Get the smart contract instance
         $web3 = new Web3('https://YOUR_INFURA_OR_ALCHEMY_ENDPOINT'); // Replace with your provider
         $contract = new Contract($web3->getProvider(), 'YOUR_CONTRACT_ABI', 'YOUR_CONTRACT_ADDRESS');
 
@@ -90,16 +90,16 @@ class CampaignController extends Controller
         ], function ($err, $transactionHash) use ($validated, $campaign, $fromAddress) {
             if ($err) {
                 return back()->with('error', 'Transaction failed: ' . $err->getMessage());
-            }
+            }*/
 
             // Create the contribution record in the database
             Contribution::create([
                 'campaign_id' => $campaign->id,
                 'amount' => $validated['amount'],
-                'wallet_address' => $fromAddress,
+                'contributor' => Auth::user()->wallet_address,
             ]);
+            $campaign->save();
 
-            return redirect()->route('campaigns.show', $campaign->id)->with('success', 'Contribution successful! Transaction Hash: ' . $transactionHash);
-        });
+            return redirect()->route('campaigns.index')->with('success', 'Contribution successful');
     }
 }

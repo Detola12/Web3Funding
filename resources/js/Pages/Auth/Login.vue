@@ -6,7 +6,9 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-
+import CustomLink from "@/Components/CustomLink.vue";
+import Web3 from 'web3'
+import {ethers} from "ethers";
 defineProps({
     canResetPassword: {
         type: Boolean,
@@ -27,6 +29,25 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const loginWeb3 = async () => {
+    if (! window.ethereum) {
+        alert('MetaMask not detected. Please try again from a MetaMask enabled browser.')
+    }
+
+    let web3 = new Web3(window.ethereum);
+
+    const message = [
+        "I have read and accept the terms and conditions (https://localhost) of this app.",
+        "Please sign me in!"
+    ].join("\n")
+
+    let address = (await web3.eth.requestAccounts())[0]
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = provider.getSigner();
+    console.log((await signer).provider)
+    return useForm({ message, address, signer }).post('/login-web3')
+}
 </script>
 
 <template>
@@ -36,6 +57,10 @@ const submit = () => {
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
         </div>
+
+<!--        <div class="text-center my-6">
+            <button @click="loginWeb3">Login with Metamask</button>
+        </div>-->
 
         <form @submit.prevent="submit">
             <div>
